@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lab3</title>
+<link rel="stylesheet" type="text/css" href="lab3.css">
+</head>
+<body>
+
+  <form onsubmit="loadId(); return false">
+  <p><input type="submit" value=" Выдать ID"></p>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+
+    function getUrl(method, params) {
+      var ver = '&v=5.52';
+      params = params || {};
+      params['access_token'] = '3fdb9eab519e03bb7bf16a8ff76142bc0475d52214ca6b70a7f6883222c654360d847dd644ceb0a8ff374';
+      return 'https://api.vk.com/method/' + method + '?' + $.param(params) + ver;
+    }
+
+    function sendRequest(method, params, suc) {
+      $.ajax({
+          url: getUrl(method, params),
+          method: 'GET',
+          dataType: "JSONP",
+          success: suc
+      });
+    }
+
+    function loadId() {
+      sendRequest('friends.search', {count: 10}, function(data){
+      makeTable(data.response);
+      });
+    }
+
+    function makeTable(friends){
+      document.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"lab3.css\"> ");
+      document.write( " <table> <tr> <td> Name  </td>  <td> ID </td> </tr> " );
+      var htm = '';
+      for (var i = 0; i < friends.items.length; i++) {
+        var f = friends.items[i];
+        document.write("<tr> <td> " + f.first_name + " </td>  <td>" +  f.id + " </td> </tr> ");
+      }
+
+    }
+</script>
+</body>
+</html>
